@@ -135,6 +135,7 @@ class ActivateIFTTT(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
 
 class BreedList(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, format=None):
         breeds = Breed.objects.all()
         serializer = BreedSerializer(breeds, many=True)

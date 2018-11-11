@@ -19,15 +19,17 @@ from django.contrib import admin
 from api import urls as api_urls
 from api import controllers
 
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(api_urls)),
-    url(r'^xss-example/', controllers.xss_example),
-    url(r'^', controllers.home),
+#    url(r'^xss-example/', controllers.xss_example),
+
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-refresh/', refresh_jwt_token),
+    url(r'^api-token-verify/', verify_jwt_token),
+    url(r'^', controllers.home),
 ]
