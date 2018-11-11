@@ -55,15 +55,3 @@ class Breed(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-class Dog(models.Model):
-    name = models.CharField(max_length=100, blank=False)
-    age = models.IntegerField()
-    breed = models.ForeignKey(Breed, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=50)
-    color = models.CharField(max_length=50)
-    favoritefood = models.CharField(max_length=100)
-    favoritetoy = models.CharField(max_length=100)
-
-    def __str__(self):
-        return str(self.name)

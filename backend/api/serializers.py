@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from api.models import Dog, Breed, BREED_SIZES, RATING_VALUES
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.models import User
+from api.models import Breed, BREED_SIZES, RATING_VALUES
 
 class BreedSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -23,26 +25,24 @@ class BreedSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class DogSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, allow_blank=False, max_length=100)
-    age = serializers.IntegerField(required=False)
-    breed = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Breed.objects.all())
-    gender = serializers.CharField(required=False, max_length=50)
-    color = serializers.CharField(required=False, max_length=50)
-    favoritetoy = serializers.CharField(required=False, max_length=100)
-    favoritefood = serializers.CharField(required=False, max_length=100)
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    username = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())])
+    password = serializers.CharField(min_length=8)
+    last_name = serializers.CharField(required=True, max_length=50)
+    first_name = serializers.CharField(required=True, max_length=50)
+
 
     def create(self, validated_data):
-        return Dog.objects.create(**validated_data)
+        user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+        user.last_name = validated_data['last_name']
+        user.first_name = validated_data['first_name']
+        user.is_active = True
+        user.is_superuser = False
+        user.is_staff = False
+        user.save()
+        return user
 
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.age = validated_data.get('age', instance.age)
-        instance.breed = validated_data.get('breed', instance.breed)
-        instance.gender = validated_data.get('gender', instance.gender)
-        instance.color = validated_data.get('color', instance.color)
-        instance.favoritetoy = validated_data.get('favoritetoy', instance.favoritetoy)
-        instance.favoritefood = validated_data.get('favoritefood', instance.favoritefood)
-        instance.save()
-        return instance
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'last_name', 'first_name', 'is_active', 'is_superuser', 'is_staff')
