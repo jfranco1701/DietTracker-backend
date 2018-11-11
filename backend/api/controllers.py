@@ -52,13 +52,6 @@ def home(request):
    return render_to_response('ember/index.html',
                {}, RequestContext(request))
 
-def xss_example(request):
-  """
-  Send requests to xss-example/ to the insecure client app
-  """
-  return render_to_response('dumb-test-app/index.html',
-              {}, RequestContext(request))
-
 class UserCreate(APIView):
     permission_classes = (AllowAny,)
 
@@ -69,6 +62,13 @@ class UserCreate(APIView):
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserList(APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request, format=None):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
 
 class Register(APIView):
@@ -140,10 +140,6 @@ class Events(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
-
-class ActivateIFTTT(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser,parsers.FormParser)
 
 class BreedList(APIView):
     permission_classes = (IsAuthenticated,)
