@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
-from api.models import Breed, BREED_SIZES, RATING_VALUES
-
+#from api.models import Breed, BREED_SIZES, RATING_VALUES
+'''
 class BreedSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, allow_blank=False, max_length=100)
@@ -24,7 +24,7 @@ class BreedSerializer(serializers.Serializer):
         instance.exerciseneeds = validated_data.get('exerciseneeds', instance.exerciseneeds)
         instance.save()
         return instance
-
+'''
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())])

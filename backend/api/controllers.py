@@ -40,8 +40,8 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
-from api.models import Breed
-from api.serializers import BreedSerializer
+#from api.models import Breed
+#from api.serializers import BreedSerializer
 from api.serializers import UserSerializer
 
 def home(request):
@@ -74,6 +74,7 @@ class Events(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
+'''
 class BreedList(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request, format=None):
@@ -90,3 +91,4 @@ class BreedList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+'''

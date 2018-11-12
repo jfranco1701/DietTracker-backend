@@ -8,6 +8,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib import admin
 import base64
 
+
 class Event(models.Model):
     eventtype = models.CharField(max_length=1000, blank=False)
     timestamp = models.DateTimeField()
@@ -30,6 +31,7 @@ class ApiKey(models.Model):
 class ApiKeyAdmin(admin.ModelAdmin):
     list_display = ('owner','key')
 
+'''
 BREED_SIZES = (
     ('Tiny', 'Tiny'),
     ('Small', 'Small'),
@@ -55,3 +57,4 @@ class Breed(models.Model):
 
     def __str__(self):
         return str(self.name)
+'''

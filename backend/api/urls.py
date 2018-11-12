@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 router = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
-    url(r'^breeds', csrf_exempt(controllers.BreedList.as_view())),
+    #url(r'^breeds', csrf_exempt(controllers.BreedList.as_view())),
 	url(r'^usercreate', csrf_exempt(controllers.UserCreate.as_view())),
     url(r'^users', csrf_exempt(controllers.UserList.as_view())),
     url(r'^api-token-auth/', obtain_jwt_token),
