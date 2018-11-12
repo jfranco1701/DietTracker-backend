@@ -40,9 +40,9 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
-#from api.models import Breed
+from api.models import Weight
 #from api.serializers import BreedSerializer
-from api.serializers import UserSerializer
+from api.serializers import UserSerializer, WeightSerializer
 
 def home(request):
    """
@@ -74,21 +74,44 @@ class Events(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
-'''
-class BreedList(APIView):
-    permission_classes = (IsAuthenticated,)
-    def get(self, request, format=None):
-        breeds = Breed.objects.all()
-        serializer = BreedSerializer(breeds, many=True)
+class WeightDetail(APIView):
+    permission_classes = (AllowAny,)
+
+    def get_object(self, pk):
+        try:
+            return Weight.objects.get(pk=pk)
+        except Weight.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        weight = self.get_object(pk)
+        serializer = WeightSerializer(weight)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
-        print 'REQUEST DATA'
-        print str(request.data)
-
-        serializer = BreedSerializer(data=request.data)
+    def put(self, request, pk, format=None):
+        weight = self.get_object(pk)
+        serializer = WeightSerializer(weight, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-'''
+
+    def delete(self, request, pk, format=None):
+        weight = self.get_object(pk)
+        weight.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class WeightList(APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request, userid, startdate, enddate, format=None):
+        weights = Weight.objects.filter(userid=userid).filter(weightdate__gte=startdate).filter(weightdate__lte=enddate)
+        serializer = WeightSerializer(weights, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format='json'):
+        serializer = WeightSerializer(data=request.data)
+        if serializer.is_valid():
+            weight = serializer.save()
+            if weight:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

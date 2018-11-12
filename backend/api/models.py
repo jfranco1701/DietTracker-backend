@@ -31,6 +31,15 @@ class ApiKey(models.Model):
 class ApiKeyAdmin(admin.ModelAdmin):
     list_display = ('owner','key')
 
+class Weight(models.Model):
+    userid = models.IntegerField(blank=False)
+    userweight = models.IntegerField(blank=False)
+    weightdate = models.DateField()
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.userid) + str(self.userweight)
+
 '''
 BREED_SIZES = (
     ('Tiny', 'Tiny'),
