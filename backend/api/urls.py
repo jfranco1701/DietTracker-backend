@@ -3,6 +3,8 @@ from django.conf.urls import include, url
 #Django Rest Framework
 from rest_framework import routers
 
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+
 from api import controllers
 from django.views.decorators.csrf import csrf_exempt
 
@@ -10,12 +12,11 @@ from django.views.decorators.csrf import csrf_exempt
 router = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
-    url(r'^session', csrf_exempt(controllers.Session.as_view())),
-    url(r'^register', csrf_exempt(controllers.Register.as_view())),
-    url(r'^events', csrf_exempt(controllers.Events.as_view())),
-    url(r'^breeds/(?P<pk>[0-9]+)', csrf_exempt(controllers.BreedDetail.as_view())),
     url(r'^breeds', csrf_exempt(controllers.BreedList.as_view())),
 	url(r'^usercreate', csrf_exempt(controllers.UserCreate.as_view())),
     url(r'^users', csrf_exempt(controllers.UserList.as_view())),
+    url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api-token-refresh/', refresh_jwt_token),
+    url(r'^api-token-verify/', verify_jwt_token),
     url(r'^', include(router.urls)),
 ]

@@ -2,7 +2,7 @@
 ENVIRONMENT = 'DEV'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '<insert secret key here>'
+SECRET_KEY = '9nzh^gu^c^q0-e9bw4m)i4q82*q!44*ssivk5f@fibd(x+zd-1'
 
 #ROOT_URLCONF = 'urls'
 ROOT_URLCONF = 'django_backend.urls'
