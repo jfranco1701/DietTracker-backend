@@ -40,30 +40,27 @@ class Weight(models.Model):
     def __str__(self):
         return str(self.userid) + str(self.userweight)
 
-'''
-BREED_SIZES = (
-    ('Tiny', 'Tiny'),
-    ('Small', 'Small'),
-    ('Medium', 'Medium'),
-    ('Large', 'Large'),
+MEAL_TYPES = (
+    ('Breakfast', 'Breakfast'),
+    ('Lunch', 'Lunch'),
+    ('Dinner', 'Dinner'),
+    ('Snack', 'Snack'),
 )
 
-RATING_VALUES = (
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4),
-    (5, 5),
-)
-
-class Breed(models.Model):
+class Food(models.Model):
     name = models.CharField(max_length=100, blank=False)
-    size = models.CharField(max_length=6, choices=BREED_SIZES)
-    friendliness = models.IntegerField(choices=RATING_VALUES)
-    trainability = models.IntegerField(choices=RATING_VALUES)
-    sheddingamount = models.IntegerField(choices=RATING_VALUES)
-    exerciseneeds = models.IntegerField(choices=RATING_VALUES)
+    timestamp = models.DateTimeField()
 
     def __str__(self):
         return str(self.name)
-'''
+
+class Meal(models.Model):
+    userid = models.IntegerField(blank=False)
+    mealdate = models.DateField(blank=False)
+    mealtype = models.CharField(max_length=10, choices=MEAL_TYPES, blank=False)
+    fooditem = models.ForeignKey(Food, on_delete=models.CASCADE)
+    quantity = models.IntegerField(blank=False)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.fooditem)

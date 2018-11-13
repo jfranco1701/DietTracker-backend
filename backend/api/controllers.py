@@ -42,7 +42,7 @@ import requests
 
 from api.models import Weight
 #from api.serializers import BreedSerializer
-from api.serializers import UserSerializer, WeightSerializer
+from api.serializers import UserSerializer, WeightSerializer, FoodSerializer, MealSerializer
 
 def home(request):
    """
@@ -51,7 +51,7 @@ def home(request):
    return render_to_response('ember/index.html',
                {}, RequestContext(request))
 
-class UserCreate(APIView):
+class Register(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, format='json'):
@@ -113,5 +113,37 @@ class WeightList(APIView):
         if serializer.is_valid():
             weight = serializer.save()
             if weight:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FoodList(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        foods = Food.objects.all()
+        serializer = FoodSerializer(foods, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = FoodSerializer(data=request.data)
+        if serializer.is_valid():
+            food = serializer.save()
+            if food:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MealList(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        meals = Meal.objects.all()
+        serializer = MealSerializer(meals, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = MealSerializer(data=request.data)
+        if serializer.is_valid():
+            meal = serializer.save()
+            if meal:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
