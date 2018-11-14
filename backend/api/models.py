@@ -49,7 +49,7 @@ MEAL_TYPES = (
 
 class Food(models.Model):
     name = models.CharField(max_length=100, blank=False)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.name)
@@ -63,4 +63,4 @@ class Meal(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.fooditem)
+        return str(self.mealtype) + str(self.fooditem)

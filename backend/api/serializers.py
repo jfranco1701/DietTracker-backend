@@ -80,4 +80,4 @@ class MealSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meal
-        fiels = ('id', 'userid', 'mealdate', 'mealtype', 'fooditem', 'quantity', 'timestamp')
+        fields = ('id', 'userid', 'mealdate', 'mealtype', 'fooditem', 'quantity', 'timestamp')
