@@ -49,10 +49,25 @@ MEAL_TYPES = (
 
 class Food(models.Model):
     name = models.CharField(max_length=100, blank=False)
+    calories = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
+    protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    fat = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    fiber = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    carbs = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    sugars = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    measure = models.CharField(max_length=25, blank=True, default="")
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.name)
+
+class Favorite(models.Model):
+    userid = models.IntegerField(blank=False)
+    fooditem = models.ForeignKey(Food, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.userid) + str(self.fooditem)
 
 class Meal(models.Model):
     userid = models.IntegerField(blank=False)

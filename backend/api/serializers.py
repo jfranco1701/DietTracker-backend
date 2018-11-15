@@ -44,6 +44,13 @@ class WeightSerializer(serializers.ModelSerializer):
 
 class FoodSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    calories = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    protein = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    fat = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    fiber = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    carbs = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    sugars = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    measure = serializers.CharField(required=True)
     name = serializers.CharField(required=True, max_length=100)
 
     def create(self, validated_data):
@@ -51,12 +58,19 @@ class FoodSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
+        instance.calories = validated_data.get('calories', instance.calories)
+        instance.protein = validated_data.get('protein', instance.protein)
+        instance.fat = validated_data.get('fat', instance.fat)
+        instance.fiber = validated_data.get('fiber', instance.fiber)
+        instance.carbs = validated_data.get('carbs', instance.carbs)
+        instance.sugars = validated_data.get('sugars', instance.sugars)
+        instance.measure = validated_data.get('measure', instance.measure)
         instance.save()
         return instance
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'timestamp')
+        fields = ('id', 'name', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')
 
 class MealSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
