@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class WeightSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    userid = serializers.IntegerField(required=True)
     userweight = serializers.IntegerField(required=True)
     weightdate = serializers.DateField(required=True)
 

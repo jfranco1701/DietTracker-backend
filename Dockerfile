@@ -15,7 +15,7 @@ WORKDIR /var/www/backend
 
 #Python packages
 RUN pip install Django
-RUN pip install djangorestframework==3.6.3
+RUN pip install djangorestframework==3.8.2
 RUN pip install djangorestframework-jwt
 RUN pip install markdown
 RUN pip install django-filter==1.1

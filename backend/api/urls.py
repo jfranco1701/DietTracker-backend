@@ -8,15 +8,27 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify
 from api import controllers
 from django.views.decorators.csrf import csrf_exempt
 
+from controllers import WeightViewSet
+
 #REST API routes
 router = routers.DefaultRouter(trailing_slash=False)
 
+weight_list = WeightViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+weight_detail = WeightViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+
 urlpatterns = [
     #url(r'^breeds', csrf_exempt(controllers.BreedList.as_view())),
-	url(r'^register', csrf_exempt(controllers.Register.as_view())),
-	url(r'^weight/(?P<userid>[0-9]+)/((?P<startdate>\d{4}-\d{2}-\d{2})/(?P<enddate>\d{4}-\d{2}-\d{2})$)', csrf_exempt(controllers.WeightList.as_view())),
-	url(r'^weight/(?P<pk>[0-9]+)', csrf_exempt(controllers.WeightDetail.as_view())),
-    url(r'^weight', csrf_exempt(controllers.WeightList.as_view())),
+	url(r'^register/', csrf_exempt(controllers.Register.as_view())),
+	url('weights/', weight_list, name='weight-list'),
+    url('weights/(?P<pk>[0-9]+)/', weight_detail, name='weight-detail'),
 	url(r'^foods/(?P<pk>[0-9]+)', csrf_exempt(controllers.FoodDetail.as_view())),
 	url(r'^foods', csrf_exempt(controllers.FoodList.as_view())),
 	url(r'^meals/(?P<pk>[0-9]+)', csrf_exempt(controllers.MealDetail.as_view())),

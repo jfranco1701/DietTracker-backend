@@ -11,6 +11,7 @@ from rest_framework import status
 #from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
 
 
 from django.shortcuts import *
@@ -29,7 +30,7 @@ from rest_framework import status
 
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import *
-from rest_framework.decorators import *
+from rest_framework.decorators import action
 from rest_framework.authentication import *
 
 #filters
@@ -70,10 +71,26 @@ class UserList(APIView):
         return Response(serializer.data)
 
 class Events(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
+class WeightViewSet(viewsets.ModelViewSet):
+    queryset = Weight.objects.all()
+    serializer_class = WeightSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_fields = ('weightdate',)
+    filter_backends = (DjangoFilterBackend,)
+
+    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    def perform_create(self, serializer):
+        serializer.save(userid=self.request.user.id)
+
+    def get_queryset(self):
+        return self.queryset \
+            .filter(userid=self.request.user.id)
+
+'''
 class WeightDetail(APIView):
     permission_classes = (AllowAny,)
 
@@ -115,6 +132,7 @@ class WeightList(APIView):
             if weight:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+'''
 
 class FoodDetail(APIView):
     permission_classes = (AllowAny,)
