@@ -47,8 +47,19 @@ MEAL_TYPES = (
     ('Snack', 'Snack'),
 )
 
+class Meal(models.Model):
+    userid = models.IntegerField(blank=False)
+    mealdate = models.DateField(blank=False)
+    mealtype = models.CharField(max_length=10, choices=MEAL_TYPES, blank=False)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.mealtype)
+
 class Food(models.Model):
     name = models.CharField(max_length=100, blank=False)
+    quantity = models.IntegerField(blank=False)
+    meal = models.ForeignKey(Meal, related_name='foodinfo', on_delete=models.CASCADE)
     calories = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
     protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
     fat = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
@@ -63,19 +74,8 @@ class Food(models.Model):
 
 class Favorite(models.Model):
     userid = models.IntegerField(blank=False)
-    fooditem = models.ForeignKey(Food, on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.userid) + str(self.fooditem)
-
-class Meal(models.Model):
-    userid = models.IntegerField(blank=False)
-    mealdate = models.DateField(blank=False)
-    mealtype = models.CharField(max_length=10, choices=MEAL_TYPES, blank=False)
-    fooditem = models.ForeignKey(Food, on_delete=models.CASCADE)
-    quantity = models.IntegerField(blank=False)
-    timestamp = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.mealtype) + str(self.fooditem)
+        return str(self.userid) + str(self.food)

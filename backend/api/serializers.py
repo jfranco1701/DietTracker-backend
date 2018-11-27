@@ -45,6 +45,8 @@ class WeightSerializer(serializers.ModelSerializer):
 
 class FoodSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    quantity = serializers.IntegerField(required=True)
+    meal = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Meal.objects.all())
     calories = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
     protein = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
     fat = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
@@ -71,15 +73,14 @@ class FoodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')
+        fields = ('id', 'name', 'quantity', 'meal', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')
 
 class MealSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     userid = serializers.IntegerField(required=True)
     mealdate = serializers.DateField(required=True)
     mealtype = serializers.ChoiceField(required=True, choices=MEAL_TYPES)
-    fooditem = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Food.objects.all())
-    quantity = serializers.IntegerField(required=True)
+    foodinfo = FoodSerializer(read_only=True, many=True)
 
     def create(self, validated_data):
         return Meal.objects.create(**validated_data)
@@ -95,4 +96,4 @@ class MealSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meal
-        fields = ('id', 'userid', 'mealdate', 'mealtype', 'fooditem', 'quantity', 'timestamp')
+        fields = ('id', 'userid', 'mealdate', 'mealtype', 'timestamp', 'foodinfo')
