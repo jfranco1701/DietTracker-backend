@@ -80,7 +80,15 @@ class MealSerializer(serializers.ModelSerializer):
     userid = serializers.IntegerField(required=True)
     mealdate = serializers.DateField(required=True)
     mealtype = serializers.ChoiceField(required=True, choices=MEAL_TYPES)
-    foodinfo = FoodSerializer(read_only=True, many=True)
+    quantity = serializers.IntegerField(required=True)
+    foodname = serializers.CharField(required=True, max_length=100)
+    calories = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    protein = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    fat = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    fiber = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    carbs = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    sugars = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
+    measure = serializers.CharField(required=True)
 
     def create(self, validated_data):
         return Meal.objects.create(**validated_data)
@@ -89,11 +97,19 @@ class MealSerializer(serializers.ModelSerializer):
         instance.userid = validated_data.get('userid', instance.userid)
         instance.mealdate = validated_data.get('mealdate', instance.mealdate)
         instance.mealtype = validated_data.get('mealtype', instance.mealtype)
-        instance.fooditem = validated_data.get('fooditem', instance.fooditem)
+        instance.foodname = validated_data.get('foodname', instance.foodname)
         instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.calories = validated_data.get('calories', instance.calories)
+        instance.protein = validated_data.get('protein', instance.protein)
+        instance.fat = validated_data.get('fat', instance.fat)
+        instance.fiber = validated_data.get('fiber', instance.fiber)
+        instance.carbs = validated_data.get('carbs', instance.carbs)
+        instance.sugars = validated_data.get('sugars', instance.sugars)
+        instance.measure = validated_data.get('measure', instance.measure)
+
         instance.save()
         return instance
 
     class Meta:
         model = Meal
-        fields = ('id', 'userid', 'mealdate', 'mealtype', 'timestamp', 'foodinfo')
+        fields = ('id', 'userid', 'mealdate', 'mealtype', 'quantity', 'foodname', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')

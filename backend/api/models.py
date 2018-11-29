@@ -51,6 +51,15 @@ class Meal(models.Model):
     userid = models.IntegerField(blank=False)
     mealdate = models.DateField(blank=False)
     mealtype = models.CharField(max_length=10, choices=MEAL_TYPES, blank=False)
+    foodname = models.CharField(max_length=100, blank=False)
+    quantity = models.IntegerField(blank=False)
+    calories = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
+    protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    fat = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    fiber = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    carbs = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    sugars = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
+    measure = models.CharField(max_length=25, blank=True, default="")
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
