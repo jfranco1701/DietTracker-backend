@@ -65,10 +65,9 @@ class Meal(models.Model):
     def __str__(self):
         return str(self.mealtype)
 
-class Food(models.Model):
-    name = models.CharField(max_length=100, blank=False)
-    quantity = models.IntegerField(blank=False)
-    meal = models.ForeignKey(Meal, related_name='foodinfo', on_delete=models.CASCADE)
+class Favorite(models.Model):
+    userid = models.IntegerField(blank=False)
+    foodname = models.CharField(max_length=100, blank=False, default='test')
     calories = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
     protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
     fat = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0)
@@ -79,12 +78,4 @@ class Food(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.name)
-
-class Favorite(models.Model):
-    userid = models.IntegerField(blank=False)
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.userid) + str(self.food)
+        return str(self.foodname)

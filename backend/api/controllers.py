@@ -42,8 +42,7 @@ from django.core import serializers
 import requests
 
 from api.models import Weight
-#from api.serializers import BreedSerializer
-from api.serializers import UserSerializer, WeightSerializer, FoodSerializer, MealSerializer
+from api.serializers import UserSerializer, WeightSerializer, MealSerializer, FavoriteSerializer
 
 def home(request):
    """
@@ -83,7 +82,6 @@ class Events(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
-
 class WeightViewSet(viewsets.ModelViewSet):
     queryset = Weight.objects.all()
     serializer_class = WeightSerializer
@@ -98,17 +96,6 @@ class WeightViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset \
             .filter(userid=self.request.user.id)
-
-class FoodViewSet(viewsets.ModelViewSet):
-    queryset = Food.objects.all()
-    serializer_class = FoodSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_fields = ('name',)
-    filter_backends = (DjangoFilterBackend,)
-
-    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    def perform_create(self, serializer):
-        serializer.save()
 
 class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
@@ -125,77 +112,15 @@ class MealViewSet(viewsets.ModelViewSet):
         return self.queryset \
             .filter(userid=self.request.user.id)
 
-'''
-class FoodDetail(APIView):
-    permission_classes = (AllowAny,)
+class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = (IsAuthenticated,)
 
-    def get_object(self, pk):
-        try:
-            return Food.objects.get(pk=pk)
-        except Food.DoesNotExist:
-            raise Http404
+    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    def perform_create(self, serializer):
+        serializer.save(userid=self.request.user.id)
 
-    def get(self, request, pk, format=None):
-        food = self.get_object(pk)
-        serializer = FoodSerializer(food)
-        return Response(serializer.data)
-
-class FoodList(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, format=None):
-        foods = Food.objects.all()
-        serializer = FoodSerializer(foods, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = FoodSerializer(data=request.data)
-        if serializer.is_valid():
-            food = serializer.save()
-            if food:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class MealDetail(APIView):
-    permission_classes = (AllowAny,)
-
-    def get_object(self, pk):
-        try:
-            return Meal.objects.get(pk=pk)
-        except Meal.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        meal = self.get_object(pk)
-        serializer = MealSerializer(meal)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        meal = self.get_object(pk)
-        serializer = MealSerializer(meal, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        meal = self.get_object(pk)
-        meal.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-class MealList(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, format=None):
-        meals = Meal.objects.all()
-        serializer = MealSerializer(meals, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = MealSerializer(data=request.data)
-        if serializer.is_valid():
-            meal = serializer.save()
-            if meal:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-'''
+    def get_queryset(self):
+        return self.queryset \
+            .filter(userid=self.request.user.id)
