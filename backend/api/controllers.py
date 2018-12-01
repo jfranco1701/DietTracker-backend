@@ -83,7 +83,7 @@ class Events(APIView):
     renderer_classes = (renderers.JSONRenderer, )
 
 class WeightViewSet(viewsets.ModelViewSet):
-    queryset = Weight.objects.all()
+    queryset = Weight.objects.all().order_by('weightdate')
     serializer_class = WeightSerializer
     permission_classes = (IsAuthenticated,)
     filter_fields = ('weightdate',)
@@ -101,7 +101,7 @@ class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
     permission_classes = (IsAuthenticated,)
-    filter_fields = ('mealdate',)
+    filter_fields = ('mealdate', 'mealtype',)
     filter_backends = (DjangoFilterBackend,)
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
