@@ -44,6 +44,8 @@ import requests
 from api.models import Weight
 from api.serializers import UserSerializer, WeightSerializer, MealSerializer, FavoriteSerializer
 
+from rest_framework import permissions
+
 def home(request):
    """
    Send requests to / to the ember.js clientside app
@@ -83,7 +85,7 @@ class Events(APIView):
     renderer_classes = (renderers.JSONRenderer, )
 
 class WeightViewSet(viewsets.ModelViewSet):
-    queryset = Weight.objects.all().order_by('weightdate')
+    queryset = Weight.objects.all().order_by('-weightdate')
     serializer_class = WeightSerializer
     permission_classes = (IsAuthenticated,)
     filter_fields = ('weightdate',)
@@ -91,7 +93,7 @@ class WeightViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def perform_create(self, serializer):
-        serializer.save(userid=self.request.user.id)
+        serializer.save()
 
     def get_queryset(self):
         return self.queryset \
@@ -106,7 +108,7 @@ class MealViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def perform_create(self, serializer):
-        serializer.save(userid=self.request.user.id)
+        serializer.save()
 
     def get_queryset(self):
         return self.queryset \
@@ -119,7 +121,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def perform_create(self, serializer):
-        serializer.save(userid=self.request.user.id)
+        serializer.save()
 
     def get_queryset(self):
         return self.queryset \
