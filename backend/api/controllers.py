@@ -41,6 +41,8 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
+from django.db.models import Sum
+
 from api.models import Weight
 from api.serializers import UserSerializer, WeightSerializer, MealSerializer, FavoriteSerializer
 

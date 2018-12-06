@@ -57,6 +57,7 @@ class MealSerializer(serializers.ModelSerializer):
     carbs = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
     sugars = serializers.DecimalField(required=True, max_digits=6, decimal_places=2)
     measure = serializers.CharField(required=True)
+    total_cals = serializers.DecimalField(max_digits=6, decimal_places=2)
 
     def create(self, validated_data):
         return Meal.objects.create(**validated_data)
@@ -81,6 +82,7 @@ class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
         fields = ('id', 'userid', 'mealdate', 'mealtype', 'quantity', 'foodname', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')
+
 
 class FavoriteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
