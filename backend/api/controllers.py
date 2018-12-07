@@ -48,6 +48,9 @@ from api.serializers import UserSerializer, WeightSerializer, MealSerializer, Fa
 
 from rest_framework import permissions
 
+from django.db.models import F
+from django.db.models import FloatField
+
 def home(request):
    """
    Send requests to / to the ember.js clientside app
@@ -112,9 +115,31 @@ class MealViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+    @action(detail=False)
+    def totals(self, request):
+        mealdate = self.request.query_params.get('mealdate', None)
+        meals = Meal.objects.all() \
+            .filter(userid=self.request.user.id)
+
+        if mealdate:
+            meals = meals.filter(mealdate=mealdate)
+
+        total_cals = meals.aggregate(total_cals = Sum(F('calories') * F('quantity'), output_field=FloatField()))['total_cals']
+        total_fat = meals.aggregate(total_fat = Sum(F('fat') * F('quantity'), output_field=FloatField()))['total_fat']
+        total_protein = meals.aggregate(total_protein = Sum(F('protein') * F('quantity'), output_field=FloatField()))['total_protein']
+        total_sugars = meals.aggregate(total_sugars = Sum(F('sugars') * F('quantity'), output_field=FloatField()))['total_sugars']
+        total_fiber = meals.aggregate(total_fiber = Sum(F('fiber') * F('quantity'), output_field=FloatField()))['total_fiber']
+        return Response({'total_calories': total_cals, 'total_fat': total_fat, \
+            'total_protein': total_protein, 'total_sugars': total_sugars, \
+            'total_fiber': total_fiber})
+
     def get_queryset(self):
         return self.queryset \
             .filter(userid=self.request.user.id)
+
+
+
+
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()

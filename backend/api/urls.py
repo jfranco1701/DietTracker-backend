@@ -40,6 +40,10 @@ favorite_list = FavoriteViewSet.as_view({
     'post': 'create'
 })
 
+meal_totals = MealViewSet.as_view({
+    'get': 'totals'
+})
+
 favorite_detail = FavoriteViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
@@ -52,6 +56,7 @@ urlpatterns = [
 	url(r'^register/', csrf_exempt(controllers.Register.as_view())),
     url('weights/(?P<pk>[0-9]+)/', weight_detail, name='weight-detail'),
     url('weights/', weight_list, name='weight-list'),
+    url('meals/totals/', meal_totals, name='meal-totals'),
     url('meals/(?P<pk>[0-9]+)/', meal_detail, name='meal-detail'),
 	url('meals/', meal_list, name='meal-list'),
     url('favorites/(?P<pk>[0-9]+)/', favorite_detail, name='favorite-detail'),
