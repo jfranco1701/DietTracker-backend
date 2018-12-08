@@ -71,6 +71,17 @@ class Register(APIView):
 
     def post(self, request, format='json'):
         serializer = UserSerializer(data=request.data)
+
+        verify = requests.post('https://www.google.com/recaptcha/api/siteverify',
+            data={'secret': '6Ldv8ngUAAAAAF9fnkjTTf4OL6z3TLMDXjwDQL8w','response': request.data['captcharesponse']},
+            verify=True)
+
+        print('reCaptcha verification')
+        print(verify.json()['success'])
+
+        if verify.json()['success'] == 'False':
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         if serializer.is_valid():
             user = serializer.save()
             if user:
