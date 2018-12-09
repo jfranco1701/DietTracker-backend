@@ -72,6 +72,9 @@ class Register(APIView):
     def post(self, request, format='json'):
         serializer = UserSerializer(data=request.data)
 
+        """
+        Verify that the token recieved at the client is valid
+        """
         verify = requests.post('https://www.google.com/recaptcha/api/siteverify',
             data={'secret': '6Ldv8ngUAAAAAF9fnkjTTf4OL6z3TLMDXjwDQL8w','response': request.data['captcharesponse']},
             verify=True)
@@ -140,6 +143,22 @@ class MealViewSet(viewsets.ModelViewSet):
         total_protein = meals.aggregate(total_protein = Sum(F('protein') * F('quantity'), output_field=FloatField()))['total_protein']
         total_sugars = meals.aggregate(total_sugars = Sum(F('sugars') * F('quantity'), output_field=FloatField()))['total_sugars']
         total_fiber = meals.aggregate(total_fiber = Sum(F('fiber') * F('quantity'), output_field=FloatField()))['total_fiber']
+
+        if total_cals == None:
+            total_cals = 0
+
+        if total_fat == None:
+            total_fat = 0
+
+        if total_protein == None:
+            total_protein = 0
+
+        if total_sugars == None:
+            total_sugars = 0
+
+        if total_fiber == None:
+            total_fiber = 0
+
         return Response({'total_calories': total_cals, 'total_fat': total_fat, \
             'total_protein': total_protein, 'total_sugars': total_sugars, \
             'total_fiber': total_fiber})
