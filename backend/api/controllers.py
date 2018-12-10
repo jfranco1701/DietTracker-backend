@@ -41,10 +41,10 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 from api.models import Weight
-from api.serializers import UserSerializer, WeightSerializer, MealSerializer, FavoriteSerializer
+from api.serializers import UserSerializer, WeightSerializer, MealSerializer, FavoriteSerializer, MostConsumedSerializer
 
 from rest_framework import permissions
 
@@ -128,6 +128,14 @@ class MealViewSet(viewsets.ModelViewSet):
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def perform_create(self, serializer):
         serializer.save()
+
+    @action(detail=False)
+    def most_consumed(self, request):
+        meals = Meal.objects.values('foodname', 'measure').annotate(count=Count('foodname', 'measure')) \
+            .filter(userid=self.request.user.id).order_by('-count')
+
+        return Response(meals)
+
 
     @action(detail=False)
     def totals(self, request):

@@ -82,6 +82,12 @@ class MealSerializer(serializers.ModelSerializer):
         model = Meal
         fields = ('id', 'userid', 'mealdate', 'mealtype', 'quantity', 'foodname', 'calories', 'protein', 'fat', 'fiber', 'carbs', 'sugars', 'measure', 'timestamp')
 
+class MostConsumedSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'foodname': obj.foodname,
+            'count': obj.count
+        }
 
 class FavoriteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

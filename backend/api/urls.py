@@ -44,6 +44,10 @@ meal_totals = MealViewSet.as_view({
     'get': 'totals'
 })
 
+most_consumed = MealViewSet.as_view({
+    'get': 'most_consumed'
+})
+
 favorite_detail = FavoriteViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
@@ -57,6 +61,7 @@ urlpatterns = [
     url('weights/(?P<pk>[0-9]+)/', weight_detail, name='weight-detail'),
     url('weights/', weight_list, name='weight-list'),
     url('meals/totals/', meal_totals, name='meal-totals'),
+    url('meals/mostconsumed/', most_consumed, name='most-consumed'),
     url('meals/(?P<pk>[0-9]+)/', meal_detail, name='meal-detail'),
 	url('meals/', meal_list, name='meal-list'),
     url('favorites/(?P<pk>[0-9]+)/', favorite_detail, name='favorite-detail'),
